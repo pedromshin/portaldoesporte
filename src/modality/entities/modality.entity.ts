@@ -1,1 +1,4 @@
-export class Modality {}
+export class Modality {
+  name: string;
+  athletes: string[];
+}

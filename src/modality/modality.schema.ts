@@ -7,6 +7,9 @@ export type ModalityDocument = HydratedDocument<Modality>;
 export class Modality {
   @Prop()
   name: string;
+
+  @Prop([String])
+  athletes: string[];
 }
 
 export const ModalitySchema = SchemaFactory.createForClass(Modality);
