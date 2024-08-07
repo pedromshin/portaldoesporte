@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateModalityDto } from './dto/create-modality.dto';
 import { UpdateModalityDto } from './dto/update-modality.dto';
 import { Model } from 'mongoose';
-import { Modality } from './entities/modality.entity';
+import { Modality } from '@entities/modality.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
@@ -27,21 +27,21 @@ export class ModalityService {
     }
   }
 
-  async findOne(_id: string): Promise<Modality> {
+  async findOne(id: string): Promise<Modality> {
     try {
-      return await this.model.findById(_id).exec();
+      return await this.model.findById(id).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
   async update(
-    _id: string,
+    id: string,
     updateModalityDto: UpdateModalityDto,
   ): Promise<Modality> {
     try {
       const result = await this.model
-        .findByIdAndUpdate(_id, updateModalityDto, {
+        .findByIdAndUpdate(id, updateModalityDto, {
           new: true,
         })
         .exec();
@@ -60,9 +60,9 @@ export class ModalityService {
     }
   }
 
-  async remove(_id: string) {
+  async remove(id: string) {
     try {
-      return await this.model.deleteOne({ _id }).exec();
+      return await this.model.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

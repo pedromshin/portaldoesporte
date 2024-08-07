@@ -25,21 +25,21 @@ export class ModalityController {
     return this.modalityService.findAll();
   }
 
-  @Get(':_id')
-  findOne(@Param('_id') _id: string) {
-    return this.modalityService.findOne(_id);
+  @Get(':id')
+  findOne(@Param('id') id: string) {
+    return this.modalityService.findOne(id);
   }
 
-  @Patch(':_id')
+  @Patch(':id')
   update(
-    @Param('_id') _id: string,
+    @Param('id') id: string,
     @Body() updateModalityDto: UpdateModalityDto,
   ) {
-    return this.modalityService.update(_id, updateModalityDto);
+    return this.modalityService.update(id, updateModalityDto);
   }
 
-  @Delete(':_id')
-  remove(@Param('_id') _id: string) {
-    return this.modalityService.remove(_id);
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.modalityService.remove(id);
   }
 }
