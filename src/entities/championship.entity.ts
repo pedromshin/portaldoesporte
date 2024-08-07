@@ -1,3 +1,3 @@
 export class Championship {
-    name: string;
+  name: string;
 }

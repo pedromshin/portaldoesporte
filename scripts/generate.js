@@ -290,9 +290,6 @@ export type ${
 export class ${resourceName.charAt(0).toUpperCase() + resourceName.slice(1)} {
 @Prop()
 name: string;
-
-@Prop([String])
-athletes: string[];
 }
 
 export const ${

@@ -5,11 +5,8 @@ export type ChampionshipDocument = HydratedDocument<Championship>;
 
 @Schema()
 export class Championship {
-@Prop()
-name: string;
-
-@Prop([String])
-athletes: string[];
+  @Prop()
+  name: string;
 }
 
 export const ChampionshipSchema = SchemaFactory.createForClass(Championship);

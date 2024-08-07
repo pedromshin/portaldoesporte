@@ -7,9 +7,6 @@ export type PostDocument = HydratedDocument<Post>;
 export class Post {
   @Prop()
   name: string;
-
-  @Prop([String])
-  athletes: string[];
 }
 
 export const PostSchema = SchemaFactory.createForClass(Post);
