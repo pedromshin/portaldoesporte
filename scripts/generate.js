@@ -4,10 +4,14 @@ const path = require('path');
 
 const resourceName = 'post';
 const servicePath = path.join('src', 'application', 'services', resourceName);
+const entityPath = path.join('src', 'entities');
 
-// Create the directory if it doesn't exist
+// Create the directories if they don't exist
 if (!fs.existsSync(servicePath)) {
   fs.mkdirSync(servicePath, { recursive: true });
+}
+if (!fs.existsSync(entityPath)) {
+  fs.mkdirSync(entityPath, { recursive: true });
 }
 
 // Generate the resource
@@ -137,6 +141,63 @@ export class ${
         return;
       }
       console.log(`Successfully transformed ${resourceName}.service.ts`);
+    });
+
+    // Update the controller file
+    const controllerFilePath = path.join(
+      servicePath,
+      `${resourceName}.controller.ts`,
+    );
+    fs.readFile(controllerFilePath, 'utf8', (err, data) => {
+      if (err) {
+        console.error(`Error reading controller file: ${err.message}`);
+        return;
+      }
+
+      // Transform the controller content
+      const transformedControllerContent = data
+        .replace(
+          /@Get\(':id'\)\n {2}findOne\(@Param\('id'\) id: string\) {\n {4}return this\.postService\.findOne\(\+id\);/,
+          `@Get(':id')\n  findOne(@Param('id') id: string) {\n    return this.postService.findOne(id);`,
+        )
+        .replace(
+          /@Patch\(':id'\)\n {2}update\(@Param\('id'\) id: string, @Body\(\) updatePostDto: UpdatePostDto\) {\n {4}return this\.postService\.update\(\+id, updatePostDto\);/,
+          `@Patch(':id')\n  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {\n    return this.postService.update(id, updatePostDto);`,
+        )
+        .replace(
+          /@Delete\(':id'\)\n {2}remove\(@Param\('id'\) id: string\) {\n {4}return this\.postService\.remove\(\+id\);/,
+          `@Delete(':id')\n  remove(@Param('id') id: string) {\n    return this.postService.remove(id);`,
+        );
+
+      // Write the transformed controller content back to the file
+      fs.writeFile(
+        controllerFilePath,
+        transformedControllerContent,
+        'utf8',
+        (err) => {
+          if (err) {
+            console.error(`Error writing controller file: ${err.message}`);
+            return;
+          }
+          console.log(`Successfully updated ${resourceName}.controller.ts`);
+        },
+      );
+    });
+
+    // Create the entity file
+    const entityFilePath = path.join(entityPath, `${resourceName}.entity.ts`);
+    const entityContent = `export class ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    } {
+    name: string;
+}`;
+
+    fs.writeFile(entityFilePath, entityContent, 'utf8', (err) => {
+      if (err) {
+        console.error(`Error writing entity file: ${err.message}`);
+        return;
+      }
+      console.log(`Successfully created ${resourceName}.entity.ts`);
     });
   });
 });
