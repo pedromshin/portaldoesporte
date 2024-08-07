@@ -239,35 +239,50 @@ export class ${
       });
     });
 
-    // Create the schema file
-    const schemaPath = path.join('src', 'schemas');
-    if (!fs.existsSync(schemaPath)) {
-      fs.mkdirSync(schemaPath, { recursive: true });
-    }
-    const schemaFilePath = path.join(schemaPath, `${resourceName}.schema.ts`);
-    const schemaContent = `import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
-    import { Document } from 'mongoose';
-    
-    @Schema()
-    export class ${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    } extends Document {
-      @Prop()
-      name: string;
-    }
-    
-    export const ${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Schema = SchemaFactory.createForClass(${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    });`;
+    // ... (previous parts of the script remain the same)
 
-    fs.writeFile(schemaFilePath, schemaContent, 'utf8', (err) => {
-      if (err) {
-        console.error(`Error writing schema file: ${err.message}`);
-        return;
+    exec(generateCommand, (err, stdout, stderr) => {
+      // ... (error handling and previous file modifications remain the same)
+
+      // Create the schema file
+      const schemaPath = path.join('src', 'schemas');
+      if (!fs.existsSync(schemaPath)) {
+        fs.mkdirSync(schemaPath, { recursive: true });
       }
-      console.log(`Successfully created ${resourceName}.schema.ts`);
+      const schemaFilePath = path.join(schemaPath, `${resourceName}.schema.ts`);
+      const schemaContent = `import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
+import { HydratedDocument } from 'mongoose';
+
+export type ${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }Document = HydratedDocument<${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }>;
+
+@Schema()
+export class ${resourceName.charAt(0).toUpperCase() + resourceName.slice(1)} {
+@Prop()
+name: string;
+
+@Prop([String])
+athletes: string[];
+}
+
+export const ${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }Schema = SchemaFactory.createForClass(${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      });`;
+
+      fs.writeFile(schemaFilePath, schemaContent, 'utf8', (err) => {
+        if (err) {
+          console.error(`Error writing schema file: ${err.message}`);
+          return;
+        }
+        console.log(`Successfully created ${resourceName}.schema.ts`);
+      });
+
+      // ... (entity file creation and other parts remain the same)
     });
 
     // Create the entity file
