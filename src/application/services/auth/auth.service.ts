@@ -35,11 +35,24 @@ export class AuthService {
         throw new HttpException('Invalid credentials', HttpStatus.UNAUTHORIZED);
       }
       const payload = { username: user.username, sub: user._id };
-      return {
-        access_token: this.jwtService.sign(payload),
-      };
+      try {
+        const token = this.jwtService.sign(payload);
+        return {
+          access_token: token,
+        };
+      } catch (jwtError) {
+        console.error('JWT signing error:', jwtError);
+        throw new HttpException(
+          'Failed to generate token',
+          HttpStatus.INTERNAL_SERVER_ERROR,
+        );
+      }
     } catch (error) {
-      throw new HttpException('Login failed', HttpStatus.INTERNAL_SERVER_ERROR);
+      console.error('Login error:', error);
+      throw new HttpException(
+        `Login failed: ${error.message}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
