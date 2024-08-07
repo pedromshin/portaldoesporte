@@ -1,3 +1,3 @@
 export class Post {
-    name: string;
+  name: string;
 }

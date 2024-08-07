@@ -326,3 +326,11 @@ export const ${
     });
   });
 });
+
+exec('npm run lint', (err, stdout, stderr) => {
+  if (err) {
+    console.error(`Error executing lint: ${stderr}`);
+    process.exit(1);
+  }
+  console.log(stdout);
+});

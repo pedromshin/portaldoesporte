@@ -1,4 +1,4 @@
-import { IsString, IsArray, ArrayNotEmpty } from 'class-validator';
+import { IsString } from 'class-validator';
 
 export class CreateAthleteDto {
   @IsString()

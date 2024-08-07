@@ -1,27 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateChampionshipDto } from './dto/create-championship.dto';
-import { UpdateChampionshipDto } from './dto/update-championship.dto';
+import { CreateFanDto } from './dto/create-fan.dto';
+import { UpdateFanDto } from './dto/update-fan.dto';
 import { Model } from 'mongoose';
-import { Championship } from '@entities/championship.entity';
+import { Fan } from '@entities/fan.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class ChampionshipService {
-  constructor(
-    @InjectModel(Championship.name) private readonly model: Model<Championship>,
-  ) {}
+export class FanService {
+  constructor(@InjectModel(Fan.name) private readonly model: Model<Fan>) {}
 
-  async create(
-    createChampionshipDto: CreateChampionshipDto,
-  ): Promise<Championship> {
+  async create(createFanDto: CreateFanDto): Promise<Fan> {
     try {
-      return await this.model.create(createChampionshipDto);
+      return await this.model.create(createFanDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findAll(): Promise<Championship[]> {
+  async findAll(): Promise<Fan[]> {
     try {
       return await this.model.find().exec();
     } catch (error) {
@@ -29,7 +25,7 @@ export class ChampionshipService {
     }
   }
 
-  async findOne(id: string): Promise<Championship> {
+  async findOne(id: string): Promise<Fan> {
     try {
       return await this.model.findById(id).exec();
     } catch (error) {
@@ -37,13 +33,10 @@ export class ChampionshipService {
     }
   }
 
-  async update(
-    id: string,
-    updateChampionshipDto: UpdateChampionshipDto,
-  ): Promise<Championship> {
+  async update(id: string, updateFanDto: UpdateFanDto): Promise<Fan> {
     try {
       const result = await this.model
-        .findByIdAndUpdate(id, updateChampionshipDto, { new: true })
+        .findByIdAndUpdate(id, updateFanDto, { new: true })
         .exec();
       if (!result) {
         throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
