@@ -5,7 +5,6 @@ import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { config } from 'dotenv';
 import { ServicesModule } from './application/services/services.module';
-import { AthleteModule } from './application/services/athlete/athlete.module';
 
 config();
 @Module({
@@ -13,7 +12,6 @@ config();
     ConfigModule.forRoot(),
     MongooseModule.forRoot(String(process.env.MONGODB_URI)),
     ServicesModule,
-    AthleteModule,
   ],
   controllers: [AppController],
   providers: [AppService],
