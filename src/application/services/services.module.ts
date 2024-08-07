@@ -5,7 +5,6 @@ import { PostModule } from './post/post.module';
 import { ChampionshipModule } from './championship/championship.module';
 import { FanModule } from './fan/fan.module';
 import { GymModule } from './gym/gym.module';
-import { SubscriptionModule } from './subscription/subscription.module';
 import { ClubModule } from './club/club.module';
 
 @Module({
@@ -16,7 +15,6 @@ import { ClubModule } from './club/club.module';
     ChampionshipModule,
     FanModule,
     GymModule,
-    SubscriptionModule,
     ClubModule,
   ],
 })
