@@ -1,25 +1,25 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateModalityDto } from './dto/create-modality.dto';
-import { UpdateModalityDto } from './dto/update-modality.dto';
+import { CreateAthleteDto } from './dto/create-athlete.dto';
+import { UpdateAthleteDto } from './dto/update-athlete.dto';
 import { Model } from 'mongoose';
-import { Modality } from '@entities/modality.entity';
+import { Athlete } from '@entities/athlete.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class ModalityService {
+export class AthleteService {
   constructor(
-    @InjectModel(Modality.name) private readonly model: Model<Modality>,
+    @InjectModel(Athlete.name) private readonly model: Model<Athlete>,
   ) {}
 
-  async create(createModalityDto: CreateModalityDto): Promise<Modality> {
+  async create(createAthleteDto: CreateAthleteDto): Promise<Athlete> {
     try {
-      return await this.model.create(createModalityDto);
+      return await this.model.create(createAthleteDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findAll(): Promise<Modality[]> {
+  async findAll(): Promise<Athlete[]> {
     try {
       return await this.model.find().exec();
     } catch (error) {
@@ -27,7 +27,7 @@ export class ModalityService {
     }
   }
 
-  async findOne(id: string): Promise<Modality> {
+  async findOne(id: string): Promise<Athlete> {
     try {
       return await this.model.findById(id).exec();
     } catch (error) {
@@ -37,11 +37,11 @@ export class ModalityService {
 
   async update(
     id: string,
-    updateModalityDto: UpdateModalityDto,
-  ): Promise<Modality> {
+    updateAthleteDto: UpdateAthleteDto,
+  ): Promise<Athlete> {
     try {
       const result = await this.model
-        .findByIdAndUpdate(id, updateModalityDto, {
+        .findByIdAndUpdate(id, updateAthleteDto, {
           new: true,
         })
         .exec();
