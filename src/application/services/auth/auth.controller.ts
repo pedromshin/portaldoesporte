@@ -14,7 +14,7 @@ export class AuthController {
     if (!user) {
       return { message: 'Invalid credentials' };
     }
-    return this.authService.login(user);
+    return this.authService.login(user, body.password);
   }
 
   @Post('register')
