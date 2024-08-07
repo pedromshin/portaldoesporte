@@ -2,7 +2,13 @@ const { exec } = require('child_process');
 const fs = require('fs');
 const path = require('path');
 
-const resourceName = 'post';
+const args = process.argv.slice(2);
+const resourceName = args[0];
+
+if (!resourceName) {
+  console.error('Please provide a resource name.');
+  process.exit(1);
+}
 const servicePath = path.join('src', 'application', 'services', resourceName);
 const entityPath = path.join('src', 'entities');
 
@@ -154,20 +160,41 @@ export class ${
         return;
       }
 
-      // Transform the controller content
       const transformedControllerContent = data
         .replace(
-          /@Get\(':id'\)\n {2}findOne\(@Param\('id'\) id: string\) {\n {4}return this\.postService\.findOne\(\+id\);/,
-          `@Get(':id')\n  findOne(@Param('id') id: string) {\n    return this.postService.findOne(id);`,
+          new RegExp(
+            `@Get\\(':id'\\)\\n {2}findOne\\(@Param\\('id'\\) id: string\\) {\\n {4}return this\\.${resourceName}Service\\.findOne\\(\\+id\\);`,
+          ),
+          `@Get(':id')\n  findOne(@Param('id') id: string) {\n    return this.${resourceName}Service.findOne(id);`,
         )
         .replace(
-          /@Patch\(':id'\)\n {2}update\(@Param\('id'\) id: string, @Body\(\) updatePostDto: UpdatePostDto\) {\n {4}return this\.postService\.update\(\+id, updatePostDto\);/,
-          `@Patch(':id')\n  update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {\n    return this.postService.update(id, updatePostDto);`,
+          new RegExp(
+            `@Patch\\(':id'\\)\\n {2}update\\(@Param\\('id'\\) id: string, @Body\\(\\) update${capitalize(
+              resourceName,
+            )}Dto: Update${capitalize(
+              resourceName,
+            )}Dto\\) {\\n {4}return this\\.${resourceName}Service\\.update\\(\\+id, update${capitalize(
+              resourceName,
+            )}Dto\\);`,
+          ),
+          `@Patch(':id')\n  update(@Param('id') id: string, @Body() update${capitalize(
+            resourceName,
+          )}Dto: Update${capitalize(
+            resourceName,
+          )}Dto) {\n    return this.${resourceName}Service.update(id, update${capitalize(
+            resourceName,
+          )}Dto);`,
         )
         .replace(
-          /@Delete\(':id'\)\n {2}remove\(@Param\('id'\) id: string\) {\n {4}return this\.postService\.remove\(\+id\);/,
-          `@Delete(':id')\n  remove(@Param('id') id: string) {\n    return this.postService.remove(id);`,
+          new RegExp(
+            `@Delete\\(':id'\\)\\n {2}remove\\(@Param\\('id'\\) id: string\\) {\\n {4}return this\\.${resourceName}Service\\.remove\\(\\+id\\);`,
+          ),
+          `@Delete(':id')\n  remove(@Param('id') id: string) {\n    return this.${resourceName}Service.remove(id);`,
         );
+
+      function capitalize(string) {
+        return string.charAt(0).toUpperCase() + string.slice(1);
+      }
 
       // Write the transformed controller content back to the file
       fs.writeFile(
