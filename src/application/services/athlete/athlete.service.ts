@@ -62,7 +62,7 @@ export class AthleteService {
 
   async remove(id: string) {
     try {
-      return await this.model.deleteOne({ id }).exec();
+      return await this.model.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
