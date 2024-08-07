@@ -2,7 +2,7 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateModalityDto } from './dto/create-modality.dto';
 import { UpdateModalityDto } from './dto/update-modality.dto';
 import { Model } from 'mongoose';
-import { Modality } from '../../../entities/modality.entity';
+import { Modality } from '@entities/modality.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
