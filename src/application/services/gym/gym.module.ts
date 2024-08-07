@@ -1,0 +1,13 @@
+import { Module } from '@nestjs/common';
+import { GymService } from './gym.service';
+import { GymController } from './gym.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Gym } from '@entities/gym.entity';
+import { GymSchema } from '@schemas/gym.schema';
+
+@Module({
+  imports: [MongooseModule.forFeature([{ name: Gym.name, schema: GymSchema }])],
+  controllers: [GymController],
+  providers: [GymService],
+})
+export class GymModule {}
