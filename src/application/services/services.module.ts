@@ -5,6 +5,7 @@ import { PostModule } from './post/post.module';
 import { ChampionshipModule } from './championship/championship.module';
 import { FanModule } from './fan/fan.module';
 import { GymModule } from './gym/gym.module';
+import { SubscriptionModule } from './subscription/subscription.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { GymModule } from './gym/gym.module';
     ChampionshipModule,
     FanModule,
     GymModule,
+    SubscriptionModule,
   ],
 })
 export class ServicesModule {}
