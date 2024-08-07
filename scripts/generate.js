@@ -184,6 +184,92 @@ export class ${
       );
     });
 
+    // Update the module file
+    const moduleFilePath = path.join(servicePath, `${resourceName}.module.ts`);
+    fs.readFile(moduleFilePath, 'utf8', (err, data) => {
+      if (err) {
+        console.error(`Error reading module file: ${err.message}`);
+        return;
+      }
+
+      // Transform the module content
+      const transformedModuleContent = `import { Module } from '@nestjs/common';
+    import { ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    }Service } from './${resourceName}.service';
+    import { ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    }Controller } from './${resourceName}.controller';
+    import { MongooseModule } from '@nestjs/mongoose';
+    import { ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    } } from '@entities/${resourceName}.entity';
+    import { ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    }Schema } from '@schemas/${resourceName}.schema';
+    
+    @Module({
+      imports: [
+        MongooseModule.forFeature([
+          { name: ${
+            resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+          }.name, schema: ${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }Schema },
+        ]),
+      ],
+      controllers: [${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }Controller],
+      providers: [${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      }Service],
+    })
+    export class ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    }Module {}`;
+
+      // Write the transformed module content back to the file
+      fs.writeFile(moduleFilePath, transformedModuleContent, 'utf8', (err) => {
+        if (err) {
+          console.error(`Error writing module file: ${err.message}`);
+          return;
+        }
+        console.log(`Successfully updated ${resourceName}.module.ts`);
+      });
+    });
+
+    // Create the schema file
+    const schemaPath = path.join('src', 'schemas');
+    if (!fs.existsSync(schemaPath)) {
+      fs.mkdirSync(schemaPath, { recursive: true });
+    }
+    const schemaFilePath = path.join(schemaPath, `${resourceName}.schema.ts`);
+    const schemaContent = `import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
+    import { Document } from 'mongoose';
+    
+    @Schema()
+    export class ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    } extends Document {
+      @Prop()
+      name: string;
+    }
+    
+    export const ${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    }Schema = SchemaFactory.createForClass(${
+      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+    });`;
+
+    fs.writeFile(schemaFilePath, schemaContent, 'utf8', (err) => {
+      if (err) {
+        console.error(`Error writing schema file: ${err.message}`);
+        return;
+      }
+      console.log(`Successfully created ${resourceName}.schema.ts`);
+    });
+
     // Create the entity file
     const entityFilePath = path.join(entityPath, `${resourceName}.entity.ts`);
     const entityContent = `export class ${
