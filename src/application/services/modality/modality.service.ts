@@ -1,44 +1,47 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateModalityDto } from './dto/create-modality.dto';
+import { UpdateModalityDto } from './dto/update-modality.dto';
 import { Model } from 'mongoose';
-import { User } from '@entities/user.entity';
+import { Modality } from '@entities/modality.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class UserService {
+export class ModalityService {
   constructor(
-    @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(Modality.name) private readonly model: Model<Modality>,
   ) {}
 
-  async create(createUserDto: CreateUserDto): Promise<User> {
+  async create(createModalityDto: CreateModalityDto): Promise<Modality> {
     try {
-      return await this.userModel.create(createUserDto);
+      return await this.model.create(createModalityDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findAll(): Promise<User[]> {
+  async findAll(): Promise<Modality[]> {
     try {
-      return await this.userModel.find().exec();
+      return await this.model.find().exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findOne(id: string): Promise<User> {
+  async findOne(id: string): Promise<Modality> {
     try {
-      return await this.userModel.findById(id).exec();
+      return await this.model.findById(id).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto): Promise<User> {
+  async update(
+    id: string,
+    updateModalityDto: UpdateModalityDto,
+  ): Promise<Modality> {
     try {
-      const result = await this.userModel
-        .findByIdAndUpdate(id, updateUserDto, { new: true })
+      const result = await this.model
+        .findByIdAndUpdate(id, updateModalityDto, { new: true })
         .exec();
       if (!result) {
         throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
@@ -54,7 +57,7 @@ export class UserService {
 
   async remove(id: string) {
     try {
-      return await this.userModel.deleteOne({ _id: id }).exec();
+      return await this.model.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

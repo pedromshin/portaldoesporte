@@ -6,5 +6,5 @@ export class CreateSubscribableDto {
 
   @IsString({ each: true })
   @IsIn(['modality', 'athlete', 'gym'], { each: true })
-  entity: string[];
+  entity: 'modality' | 'athlete' | 'gym';
 }

@@ -13,6 +13,9 @@ export class Subscribable {
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Post' }] })
   postIds: Types.ObjectId[];
+
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }] })
+  subscribersIds: Types.ObjectId[];
 }
 
 export const SubscribableSchema = SchemaFactory.createForClass(Subscribable);

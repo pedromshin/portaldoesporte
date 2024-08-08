@@ -4,20 +4,33 @@ import { UpdateSubscribableDto } from './dto/update-subscribable.dto';
 import { Model } from 'mongoose';
 import { Subscribable } from '@entities/subscribable.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { Modality } from '@entities/modality.entity';
 
 @Injectable()
 export class SubscribableService {
   constructor(
-    @InjectModel(Subscribable.name) private readonly model: Model<Subscribable>,
+    @InjectModel(Subscribable.name)
+    private readonly subscribableModel: Model<Subscribable>,
+    @InjectModel(Modality.name) private readonly modalityModel: Model<Modality>,
   ) {}
 
   async create(
     createSubscribableDto: CreateSubscribableDto,
   ): Promise<Subscribable> {
     try {
-      const subscribable = await this.model.create(createSubscribableDto);
+      const entity = createSubscribableDto.entity;
 
-      return await this.model.create(createSubscribableDto);
+      if (entity === 'modality') {
+        const modality = await this.modalityModel.create({
+          name: createSubscribableDto.name,
+        });
+      }
+
+      const subscribable = await this.subscribableModel.create(
+        createSubscribableDto,
+      );
+
+      return subscribable;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -25,7 +38,7 @@ export class SubscribableService {
 
   async findAll(): Promise<Subscribable[]> {
     try {
-      return await this.model.find().exec();
+      return await this.subscribableModel.find().exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -33,7 +46,7 @@ export class SubscribableService {
 
   async findOne(id: string): Promise<Subscribable> {
     try {
-      return await this.model.findById(id).exec();
+      return await this.subscribableModel.findById(id).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -44,7 +57,7 @@ export class SubscribableService {
     updateSubscribableDto: UpdateSubscribableDto,
   ): Promise<Subscribable> {
     try {
-      const result = await this.model
+      const result = await this.subscribableModel
         .findByIdAndUpdate(id, updateSubscribableDto, { new: true })
         .exec();
       if (!result) {
@@ -61,7 +74,7 @@ export class SubscribableService {
 
   async remove(id: string) {
     try {
-      return await this.model.deleteOne({ _id: id }).exec();
+      return await this.subscribableModel.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
