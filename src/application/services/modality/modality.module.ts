@@ -2,8 +2,7 @@ import { Module } from '@nestjs/common';
 import { ModalityService } from './modality.service';
 import { ModalityController } from './modality.controller';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ModalitySchema } from '@schemas/modality.schema';
-import { Modality } from '@entities/modality.entity';
+import { Modality, ModalitySchema } from '@schemas/modality.schema';
 
 @Module({
   imports: [

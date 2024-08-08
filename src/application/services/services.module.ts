@@ -7,6 +7,7 @@ import { GymModule } from './gym/gym.module';
 import { ClubModule } from './club/club.module';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
+import { SubscribableModule } from './subscribable/subscribable.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     ClubModule,
     UserModule,
     AuthModule,
+    SubscribableModule,
   ],
 })
 export class ServicesModule {}
