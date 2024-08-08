@@ -65,24 +65,28 @@ export class UserService {
 
   async subscribe(id: string, subscribableId: string) {
     try {
-      const updatedUser = await this.userModel
-        .findByIdAndUpdate(
-          id,
-          { $push: { subscribableIds: subscribableId } },
-          { new: true },
-        )
-        .exec();
-      if (!updatedUser) {
+      const [updatedUser, updatedSubscribable] = await Promise.all([
+        this.userModel
+          .findByIdAndUpdate(
+            id,
+            { $push: { subscribableIds: subscribableId } },
+            { new: true },
+          )
+          .exec(),
+        this.subscribableModel
+          .findByIdAndUpdate(
+            subscribableId,
+            { $push: { subscribersIds: id } },
+            { new: true },
+          )
+          .exec(),
+      ]);
+
+      if (!updatedUser || !updatedSubscribable) {
         throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
       }
-      const updatedSubscribable = await this.subscribableModel
-        .findByIdAndUpdate(id, { $push: { subscribersIds: id } }, { new: true })
-        .exec();
-      if (!updatedUser) {
-        throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
-      }
-      return updatedUser;
-      return updatedUser;
+
+      return [updatedUser, updatedSubscribable];
     } catch (error) {
       throw new HttpException(
         { status: HttpStatus.BAD_REQUEST, error: 'Error updating document' },

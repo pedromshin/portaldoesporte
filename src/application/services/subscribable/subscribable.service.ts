@@ -21,15 +21,16 @@ export class SubscribableService {
   ): Promise<Subscribable> {
     try {
       const entity = createSubscribableDto.entity;
+      const name = createSubscribableDto.name;
 
-      if (entity === 'modality') {
-        const modality = await this.modalityModel.create({
-          name: createSubscribableDto.name,
-        });
-      } else if (entity === 'athlete') {
-        const athlete = await this.athleteModel.create({
-          name: createSubscribableDto.name,
-        });
+      const entityModels = {
+        modality: this.modalityModel,
+        athlete: this.athleteModel,
+      };
+
+      if (entity in entityModels) {
+        const model = entityModels[entity];
+        await model.create({ name });
       }
 
       const subscribable = await this.subscribableModel.create(
