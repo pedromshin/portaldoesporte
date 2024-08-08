@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Subscribable } from '@entities/subscribable.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Modality } from '@entities/modality.entity';
+import { Athlete } from '@entities/athlete.entity';
 
 @Injectable()
 export class SubscribableService {
@@ -12,6 +13,7 @@ export class SubscribableService {
     @InjectModel(Subscribable.name)
     private readonly subscribableModel: Model<Subscribable>,
     @InjectModel(Modality.name) private readonly modalityModel: Model<Modality>,
+    @InjectModel(Athlete.name) private readonly athleteModel: Model<Athlete>,
   ) {}
 
   async create(
@@ -24,8 +26,10 @@ export class SubscribableService {
         const modality = await this.modalityModel.create({
           name: createSubscribableDto.name,
         });
-
-        console.log(modality);
+      } else if (entity === 'athlete') {
+        const athlete = await this.athleteModel.create({
+          name: createSubscribableDto.name,
+        });
       }
 
       const subscribable = await this.subscribableModel.create(
