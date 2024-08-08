@@ -18,26 +18,26 @@ export class SubscribableService {
 
   async create(
     createSubscribableDto: CreateSubscribableDto,
-  ): Promise<Subscribable> {
+  ): Promise<[any, Subscribable]> {
     try {
-      const entity = createSubscribableDto.entity;
-      const name = createSubscribableDto.name;
-
+      const { entity, name } = createSubscribableDto;
       const entityModels = {
         modality: this.modalityModel,
         athlete: this.athleteModel,
       };
 
+      const promises = [];
+
       if (entity in entityModels) {
         const model = entityModels[entity];
-        await model.create({ name });
+        promises.push(model.create({ name }));
       }
 
-      const subscribable = await this.subscribableModel.create(
-        createSubscribableDto,
-      );
+      promises.push(this.subscribableModel.create(createSubscribableDto));
 
-      return subscribable;
+      const [entityResponse, subscribable] = await Promise.all(promises);
+
+      return [entityResponse, subscribable];
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
