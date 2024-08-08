@@ -4,11 +4,14 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { Model } from 'mongoose';
 import { User } from '@entities/user.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { Subscribable } from '@entities/subscribable.entity';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(Subscribable.name)
+    private readonly subscribableModel: Model<Subscribable>,
   ) {}
 
   async create(createUserDto: CreateUserDto): Promise<User> {
@@ -57,6 +60,34 @@ export class UserService {
       return await this.userModel.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async subscribe(id: string, subscribableId: string) {
+    try {
+      const updatedUser = await this.userModel
+        .findByIdAndUpdate(
+          id,
+          { $push: { subscribableIds: subscribableId } },
+          { new: true },
+        )
+        .exec();
+      if (!updatedUser) {
+        throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
+      }
+      const updatedSubscribable = await this.subscribableModel
+        .findByIdAndUpdate(id, { $push: { subscribersIds: id } }, { new: true })
+        .exec();
+      if (!updatedUser) {
+        throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
+      }
+      return updatedUser;
+      return updatedUser;
+    } catch (error) {
+      throw new HttpException(
+        { status: HttpStatus.BAD_REQUEST, error: 'Error updating document' },
+        HttpStatus.BAD_REQUEST,
+      );
     }
   }
 }

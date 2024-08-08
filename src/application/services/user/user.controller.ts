@@ -39,4 +39,12 @@ export class UserController {
   remove(@Param('id') id: string) {
     return this.userService.remove(id);
   }
+
+  @Patch(':id/subscribe/:subscribableId')
+  subscribe(
+    @Param('id') id: string,
+    @Param('subscribableId') subscribableId: string,
+  ) {
+    return this.userService.subscribe(id, subscribableId);
+  }
 }
