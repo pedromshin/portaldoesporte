@@ -15,7 +15,7 @@ export class User {
   password: string;
 
   @Prop({ type: [{ type: Types.ObjectId, ref: 'Subscribable' }] })
-  subscribables: Types.ObjectId[];
+  subscribableIds: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
