@@ -15,6 +15,8 @@ export class SubscribableService {
     createSubscribableDto: CreateSubscribableDto,
   ): Promise<Subscribable> {
     try {
+      const subscribable = await this.model.create(createSubscribableDto);
+
       return await this.model.create(createSubscribableDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
