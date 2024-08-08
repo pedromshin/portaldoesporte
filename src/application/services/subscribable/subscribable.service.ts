@@ -24,6 +24,8 @@ export class SubscribableService {
         const modality = await this.modalityModel.create({
           name: createSubscribableDto.name,
         });
+
+        console.log(modality);
       }
 
       const subscribable = await this.subscribableModel.create(
