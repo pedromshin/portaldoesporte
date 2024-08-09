@@ -5,6 +5,9 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema()
 export class User {
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'Subscribable' }] })
+  _subscribableIds: Types.ObjectId[];
+
   @Prop()
   name: string;
 
@@ -13,9 +16,6 @@ export class User {
 
   @Prop({ required: true })
   password: string;
-
-  @Prop({ type: [{ type: Types.ObjectId, ref: 'Subscribable' }] })
-  subscribableIds: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

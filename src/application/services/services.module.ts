@@ -4,6 +4,7 @@ import { AuthModule } from './auth/auth.module';
 import { SubscribableModule } from './subscribable/subscribable.module';
 import { AthleteModule } from './athlete/athlete.module';
 import { SportModule } from './sport/sport.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -12,6 +13,7 @@ import { SportModule } from './sport/sport.module';
     SubscribableModule,
     AthleteModule,
     SportModule,
+    PostModule,
   ],
 })
 export class ServicesModule {}
