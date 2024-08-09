@@ -68,7 +68,6 @@ export class PostService {
   async feed(id: string) {
     try {
       const user = await this.userModel.findById(id).exec();
-
       if (!user) {
         throw new HttpException('User not found', HttpStatus.NOT_FOUND);
       }
@@ -77,9 +76,11 @@ export class PostService {
         .find({ _id: { $in: user._subscribableIds } })
         .exec();
 
-      const posts = await this.postModel
-        .find({ _id: { $in: subscribables.map((item) => item._postIds) } })
-        .exec();
+      const postIds = subscribables.flatMap(
+        (subscribable) => subscribable._postIds,
+      );
+
+      const posts = await this.postModel.find({ _id: { $in: postIds } }).exec();
 
       return posts;
     } catch (error) {
