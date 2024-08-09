@@ -5,17 +5,20 @@ import { Model } from 'mongoose';
 import { Post } from '@entities/post.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@entities/user.entity';
+import { Subscribable } from '@entities/subscribable.entity';
 
 @Injectable()
 export class PostService {
   constructor(
-    @InjectModel(Post.name) private readonly model: Model<Post>,
+    @InjectModel(Post.name) private readonly postModel: Model<Post>,
     @InjectModel(User.name) private readonly userModel: Model<User>,
+    @InjectModel(Subscribable.name)
+    private readonly subscribableModel: Model<Subscribable>,
   ) {}
 
   async create(createPostDto: CreatePostDto): Promise<Post> {
     try {
-      return await this.model.create(createPostDto);
+      return await this.postModel.create(createPostDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -23,7 +26,7 @@ export class PostService {
 
   async findAll(): Promise<Post[]> {
     try {
-      return await this.model.find().exec();
+      return await this.postModel.find().exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -31,7 +34,7 @@ export class PostService {
 
   async findOne(id: string): Promise<Post> {
     try {
-      return await this.model.findById(id).exec();
+      return await this.postModel.findById(id).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -39,7 +42,7 @@ export class PostService {
 
   async update(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
     try {
-      const result = await this.model
+      const result = await this.postModel
         .findByIdAndUpdate(id, updatePostDto, { new: true })
         .exec();
       if (!result) {
@@ -56,7 +59,7 @@ export class PostService {
 
   async remove(id: string) {
     try {
-      return await this.model.deleteOne({ _id: id }).exec();
+      return await this.postModel.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
@@ -65,9 +68,20 @@ export class PostService {
   async feed(id: string) {
     try {
       const user = await this.userModel.findById(id).exec();
-      console.log(user);
 
-      // return await this.model.deleteOne({ _id: id }).exec();
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      const subscribables = await this.subscribableModel
+        .find({ _id: { $in: user._subscribableIds } })
+        .exec();
+
+      const posts = await this.postModel
+        .find({ _id: { $in: subscribables.map((item) => item._postIds) } })
+        .exec();
+
+      return posts;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
