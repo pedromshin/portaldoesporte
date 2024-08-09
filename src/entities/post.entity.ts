@@ -1,5 +1,5 @@
 export class Post {
-  _subscribableId: string[];
+  _subscribableId: string;
   name: string;
   entity: string;
 }

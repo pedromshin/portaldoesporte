@@ -1,10 +1,11 @@
-import { IsIn, IsString } from 'class-validator';
+import { IsMongoId, IsNotEmpty, IsString, IsIn } from 'class-validator';
 
 export class CreatePostDto {
-  @IsString()
+  @IsMongoId()
   _subscribableId: string;
 
   @IsString()
+  @IsNotEmpty()
   name: string;
 
   @IsString({ each: true })
