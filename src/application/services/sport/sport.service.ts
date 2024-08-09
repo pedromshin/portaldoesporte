@@ -1,25 +1,23 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { CreateModalityDto } from './dto/create-modality.dto';
-import { UpdateModalityDto } from './dto/update-modality.dto';
+import { CreateSportDto } from './dto/create-sport.dto';
+import { UpdateSportDto } from './dto/update-sport.dto';
 import { Model } from 'mongoose';
-import { Modality } from '@entities/modality.entity';
+import { Sport } from '@entities/sport.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class ModalityService {
-  constructor(
-    @InjectModel(Modality.name) private readonly model: Model<Modality>,
-  ) {}
+export class SportService {
+  constructor(@InjectModel(Sport.name) private readonly model: Model<Sport>) {}
 
-  async create(createModalityDto: CreateModalityDto): Promise<Modality> {
+  async create(createSportDto: CreateSportDto): Promise<Sport> {
     try {
-      return await this.model.create(createModalityDto);
+      return await this.model.create(createSportDto);
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
 
-  async findAll(): Promise<Modality[]> {
+  async findAll(): Promise<Sport[]> {
     try {
       return await this.model.find().exec();
     } catch (error) {
@@ -27,7 +25,7 @@ export class ModalityService {
     }
   }
 
-  async findOne(id: string): Promise<Modality> {
+  async findOne(id: string): Promise<Sport> {
     try {
       return await this.model.findById(id).exec();
     } catch (error) {
@@ -35,13 +33,10 @@ export class ModalityService {
     }
   }
 
-  async update(
-    id: string,
-    updateModalityDto: UpdateModalityDto,
-  ): Promise<Modality> {
+  async update(id: string, updateSportDto: UpdateSportDto): Promise<Sport> {
     try {
       const result = await this.model
-        .findByIdAndUpdate(id, updateModalityDto, { new: true })
+        .findByIdAndUpdate(id, updateSportDto, { new: true })
         .exec();
       if (!result) {
         throw new HttpException('Document not found', HttpStatus.NOT_FOUND);

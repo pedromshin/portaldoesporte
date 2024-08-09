@@ -4,7 +4,7 @@ import { UpdateSubscribableDto } from './dto/update-subscribable.dto';
 import { Model } from 'mongoose';
 import { Subscribable } from '@entities/subscribable.entity';
 import { InjectModel } from '@nestjs/mongoose';
-import { Modality } from '@entities/modality.entity';
+import { Sport } from '@entities/sport.entity';
 import { Athlete } from '@entities/athlete.entity';
 
 @Injectable()
@@ -12,7 +12,7 @@ export class SubscribableService {
   constructor(
     @InjectModel(Subscribable.name)
     private readonly subscribableModel: Model<Subscribable>,
-    @InjectModel(Modality.name) private readonly modalityModel: Model<Modality>,
+    @InjectModel(Sport.name) private readonly sportModel: Model<Sport>,
     @InjectModel(Athlete.name) private readonly athleteModel: Model<Athlete>,
   ) {}
 
@@ -22,7 +22,7 @@ export class SubscribableService {
     try {
       const { entity, name } = createSubscribableDto;
       const entityModels = {
-        modality: this.modalityModel,
+        sport: this.sportModel,
         athlete: this.athleteModel,
       };
 
