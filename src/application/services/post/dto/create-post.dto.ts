@@ -1,8 +1,9 @@
 import { IsMongoId, IsNotEmpty, IsString, IsIn } from 'class-validator';
+import { Types } from 'mongoose';
 
 export class CreatePostDto {
   @IsMongoId()
-  _subscribableId: string;
+  _subscribableId: Types.ObjectId;
 
   @IsString()
   @IsNotEmpty()

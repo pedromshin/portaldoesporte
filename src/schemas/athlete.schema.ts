@@ -5,7 +5,7 @@ export type AthleteDocument = HydratedDocument<Athlete>;
 
 @Schema()
 export class Athlete {
-  @Prop({ type: Types.ObjectId, ref: 'Subscribable' })
+  @Prop({ type: Types.ObjectId, ref: 'Subscribable', required: true })
   _subscribableId: Types.ObjectId;
 
   @Prop()

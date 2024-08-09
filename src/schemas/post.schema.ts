@@ -5,10 +5,10 @@ export type PostDocument = HydratedDocument<Post>;
 
 @Schema()
 export class Post {
-  @Prop({ type: Types.ObjectId, ref: 'Subscribable' })
+  @Prop({ type: Types.ObjectId, ref: 'Subscribable', required: true })
   _subscribableId: Types.ObjectId;
 
-  @Prop()
+  @Prop({ required: true })
   name: string;
 
   @Prop({ required: true })
