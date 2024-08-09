@@ -69,14 +69,14 @@ export class UserService {
         this.userModel
           .findByIdAndUpdate(
             id,
-            { $push: { _subscribableIds: subscribableId } },
+            { $addToSet: { _subscribableIds: subscribableId } },
             { new: true },
           )
           .exec(),
         this.subscribableModel
           .findByIdAndUpdate(
             subscribableId,
-            { $push: { _userIds: id } },
+            { $addToSet: { _userIds: id } },
             { new: true },
           )
           .exec(),
