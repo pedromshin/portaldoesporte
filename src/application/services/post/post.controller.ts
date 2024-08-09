@@ -39,4 +39,9 @@ export class PostController {
   remove(@Param('id') id: string) {
     return this.postService.remove(id);
   }
+
+  @Get(':id')
+  feed(@Param('id') id: string) {
+    return this.postService.feed(id);
+  }
 }

@@ -57,4 +57,12 @@ export class PostService {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
   }
+
+  async feed(id: string) {
+    try {
+      // return await this.model.deleteOne({ _id: id }).exec();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
 }
