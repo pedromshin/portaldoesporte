@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Post } from '@entities/post.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { User } from '@entities/user.entity';
@@ -18,7 +18,16 @@ export class PostService {
 
   async create(createPostDto: CreatePostDto): Promise<[Post, Subscribable]> {
     try {
-      const post = await this.postModel.create(createPostDto);
+      const subscribableId = Types.ObjectId.isValid(
+        createPostDto._subscribableId,
+      )
+        ? new Types.ObjectId(createPostDto._subscribableId)
+        : createPostDto._subscribableId;
+
+      const post = await this.postModel.create({
+        ...createPostDto,
+        _subscribableId: subscribableId,
+      });
 
       const subscribable = await this.subscribableModel.findByIdAndUpdate(
         createPostDto._subscribableId,
