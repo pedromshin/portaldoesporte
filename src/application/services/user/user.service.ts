@@ -69,7 +69,7 @@ export class UserService {
         this.userModel
           .findByIdAndUpdate(
             id,
-            { $push: { subscribableIds: subscribableId } },
+            { $push: { _subscribableIds: subscribableId } },
             { new: true },
           )
           .exec(),
