@@ -6,6 +6,8 @@ import { Subscribable } from '@entities/subscribable.entity';
 import { InjectModel } from '@nestjs/mongoose';
 import { Sport } from '@entities/sport.entity';
 import { Athlete } from '@entities/athlete.entity';
+import { User } from '@entities/user.entity';
+import { Post } from '@entities/post.entity';
 
 @Injectable()
 export class SubscribableService {
@@ -14,6 +16,7 @@ export class SubscribableService {
     private readonly subscribableModel: Model<Subscribable>,
     @InjectModel(Sport.name) private readonly sportModel: Model<Sport>,
     @InjectModel(Athlete.name) private readonly athleteModel: Model<Athlete>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
   ) {}
 
   async create(
@@ -81,6 +84,23 @@ export class SubscribableService {
   async remove(id: string) {
     try {
       return await this.subscribableModel.deleteOne({ _id: id }).exec();
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
+    }
+  }
+
+  async clubs(id: string) {
+    try {
+      const user = await this.userModel.findById(id).exec();
+      if (!user) {
+        throw new HttpException('User not found', HttpStatus.NOT_FOUND);
+      }
+
+      const subscribables = await this.subscribableModel
+        .find({ _id: { $in: user._subscribableIds } })
+        .exec();
+
+      return subscribables;
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }

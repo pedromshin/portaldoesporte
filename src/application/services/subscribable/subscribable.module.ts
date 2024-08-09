@@ -5,6 +5,8 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { SubscribableSchema, Subscribable } from '@schemas/subscribable.schema';
 import { Sport, SportSchema } from '@schemas/sport.schema';
 import { Athlete, AthleteSchema } from '@schemas/athlete.schema';
+import { Post, PostSchema } from '@schemas/post.schema';
+import { User, UserSchema } from '@schemas/user.schema';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { Athlete, AthleteSchema } from '@schemas/athlete.schema';
       { name: Subscribable.name, schema: SubscribableSchema },
       { name: Sport.name, schema: SportSchema },
       { name: Athlete.name, schema: AthleteSchema },
+      { name: Post.name, schema: PostSchema },
+      { name: User.name, schema: UserSchema },
     ]),
   ],
   controllers: [SubscribableController],

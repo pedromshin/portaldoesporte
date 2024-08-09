@@ -42,4 +42,9 @@ export class SubscribableController {
   remove(@Param('id') id: string) {
     return this.subscribableService.remove(id);
   }
+
+  @Get(':id/clubs')
+  feed(@Param('id') id: string) {
+    return this.subscribableService.clubs(id);
+  }
 }
