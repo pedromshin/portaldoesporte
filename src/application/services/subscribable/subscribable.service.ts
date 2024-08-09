@@ -20,24 +20,23 @@ export class SubscribableService {
     createSubscribableDto: CreateSubscribableDto,
   ): Promise<[any, Subscribable]> {
     try {
+      const subscribable = await this.subscribableModel.create(
+        createSubscribableDto,
+      );
+
       const { entity, name } = createSubscribableDto;
+
       const entityModels = {
         sport: this.sportModel,
         athlete: this.athleteModel,
       };
 
-      const promises = [];
+      const model = await entityModels[entity].create({
+        _subscribableId: subscribable._id,
+        name,
+      });
 
-      if (entity in entityModels) {
-        const model = entityModels[entity];
-        promises.push(model.create({ name }));
-      }
-
-      promises.push(this.subscribableModel.create(createSubscribableDto));
-
-      const [entityResponse, subscribable] = await Promise.all(promises);
-
-      return [entityResponse, subscribable];
+      return [model, subscribable];
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
