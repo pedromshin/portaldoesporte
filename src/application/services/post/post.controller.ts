@@ -40,7 +40,7 @@ export class PostController {
     return this.postService.remove(id);
   }
 
-  @Get(':id')
+  @Get(':id/feed')
   feed(@Param('id') id: string) {
     return this.postService.feed(id);
   }

@@ -4,10 +4,14 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Model } from 'mongoose';
 import { Post } from '@entities/post.entity';
 import { InjectModel } from '@nestjs/mongoose';
+import { User } from '@entities/user.entity';
 
 @Injectable()
 export class PostService {
-  constructor(@InjectModel(Post.name) private readonly model: Model<Post>) {}
+  constructor(
+    @InjectModel(Post.name) private readonly model: Model<Post>,
+    @InjectModel(User.name) private readonly userModel: Model<User>,
+  ) {}
 
   async create(createPostDto: CreatePostDto): Promise<Post> {
     try {
@@ -60,6 +64,9 @@ export class PostService {
 
   async feed(id: string) {
     try {
+      const user = await this.userModel.findById(id).exec();
+      console.log(user);
+
       // return await this.model.deleteOne({ _id: id }).exec();
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);

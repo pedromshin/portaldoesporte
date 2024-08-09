@@ -230,10 +230,9 @@ export class ${
     import { MongooseModule } from '@nestjs/mongoose';
     import { ${
       resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    } } from '@entities/${resourceName}.entity';
-    import { ${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Schema } from '@schemas/${resourceName}.schema';
+    }Schema, ${
+        resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
+      } } from '@schemas/${resourceName}.schema';
     
     @Module({
       imports: [
