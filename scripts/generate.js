@@ -41,63 +41,41 @@ exec(generateCommand, (err, stdout, stderr) => {
       return;
     }
 
+    const name = resourceName.charAt(0).toUpperCase() + resourceName.slice(1);
+
     // Transform the content
     const transformedContent = `import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
-import { Create${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Dto } from './dto/create-${resourceName}.dto';
-import { Update${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Dto } from './dto/update-${resourceName}.dto';
+import { Create${name}Dto } from './dto/create-${resourceName}.dto';
+import { Update${name}Dto } from './dto/update-${resourceName}.dto';
 import { Model } from 'mongoose';
-import { ${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    } } from '@entities/${resourceName}.entity';
+import { ${name} } from '@entities/${resourceName}.entity';
 import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
-export class ${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Service {
+export class ${name}Service {
     constructor(
-        @InjectModel(${
-          resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-        }.name) private readonly model: Model<${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }>,
+        @InjectModel(${name}.name) private readonly ${resourceName}Model: Model<${name}>,
     ) {}
 
-    async create(create${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Dto: Create${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Dto): Promise<${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }> {
+    async create(create${name}Dto: Create${name}Dto): Promise<${name}> {
         try {
-            return await this.model.create(create${
-              resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-            }Dto);
+            return await this.${resourceName}Model.create(create${name}Dto);
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async findAll(): Promise<${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }[]> {
+    async findAll(): Promise<${name}[]> {
         try {
-            return await this.model.find().exec();
+            return await this.${resourceName}Model.find().exec();
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
     }
 
-    async findOne(id: string): Promise<${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }> {
+    async findOne(id: string): Promise<${name}> {
         try {
-            return await this.model.findById(id).exec();
+            return await this.${resourceName}Model.findById(id).exec();
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
@@ -105,19 +83,11 @@ export class ${
 
     async update(
         id: string,
-        update${
-          resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-        }Dto: Update${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }Dto,
-    ): Promise<${
-      resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-    }> {
+        update${name}Dto: Update${name}Dto,
+    ): Promise<${name}> {
         try {
-            const result = await this.model
-                .findByIdAndUpdate(id, update${
-                  resourceName.charAt(0).toUpperCase() + resourceName.slice(1)
-                }Dto, { new: true })
+            const result = await this.${resourceName}Model
+                .findByIdAndUpdate(id, update${name}Dto, { new: true })
                 .exec();
             if (!result) {
                 throw new HttpException('Document not found', HttpStatus.NOT_FOUND);
@@ -133,7 +103,7 @@ export class ${
 
     async remove(id: string) {
         try {
-            return await this.model.deleteOne({ _id: id }).exec();
+            return await this.${resourceName}Model.deleteOne({ _id: id }).exec();
         } catch (error) {
             throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
         }
