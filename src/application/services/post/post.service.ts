@@ -30,7 +30,7 @@ export class PostService {
       });
 
       const subscribable = await this.subscribableModel.findByIdAndUpdate(
-        createPostDto._subscribableId,
+        subscribableId,
         { $addToSet: { _postIds: post._id } },
         { new: true },
       );
