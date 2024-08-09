@@ -16,9 +16,17 @@ export class PostService {
     private readonly subscribableModel: Model<Subscribable>,
   ) {}
 
-  async create(createPostDto: CreatePostDto): Promise<Post> {
+  async create(createPostDto: CreatePostDto): Promise<[Post, Subscribable]> {
     try {
-      return await this.postModel.create(createPostDto);
+      const post = await this.postModel.create(createPostDto);
+
+      const subscribable = await this.subscribableModel.findByIdAndUpdate(
+        createPostDto._subscribableId,
+        { $addToSet: { _postIds: post._id } },
+        { new: true },
+      );
+
+      return [post, subscribable];
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.BAD_REQUEST);
     }
